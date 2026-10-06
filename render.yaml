@@ -1,0 +1,31 @@
+services:
+  # === WEB ===
+  - type: web
+    name: getid-web
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: BOT_USERNAME
+        sync: false
+      - key: WEB_URL
+        sync: false
+      - key: INTERNAL_SECRET
+        generateValue: true
+      - key: PORT
+        value: "8080"
+
+  # === BOT ===
+  - type: worker
+    name: getid-bot
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: WEB_URL
+        sync: false
+      - key: INTERNAL_SECRET
+        sync: false
